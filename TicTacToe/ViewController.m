@@ -76,6 +76,7 @@ NSArray *_patterns;
             label.backgroundColor = [UIColor whiteColor];
         }
     }
+    [self.whichPlayerLabel.layer removeAllAnimations];
 }
 
 - (void)didReceiveMemoryWarning
@@ -120,7 +121,6 @@ NSArray *_patterns;
                 }
                 
                 if (matches >= 3) {
-                    NSLog(@"Winner: %@ Pattern: %@", label.text, pattern);
                     for (UILabel * label in pattern) {
                         label.backgroundColor = [UIColor orangeColor];
                     }
@@ -145,13 +145,34 @@ NSArray *_patterns;
 {
     UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
     label.text = self.currentPlayer;
+    label.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    [label setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
+    [UIView animateKeyframesWithDuration:0.2 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+
+        [label setTransform:CGAffineTransformMakeScale(0.35, 0.35)];
+        [label setTransform:CGAffineTransformMakeRotation(M_PI)];
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2 animations:^{
+//
+            [label setTransform:CGAffineTransformMakeScale(1, 1)];
+        }];
+    }];
+
     if ([self whoWon]) {
+
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
                                                     message:[NSString stringWithFormat:@"%@ is the winner", label.text]
                                                    delegate:self
                                           cancelButtonTitle:@"New Game"
                                           otherButtonTitles:nil];
-        [av show];
+        self.whichPlayerLabel.alpha = 0;
+        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", label.text];
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            self.whichPlayerLabel.alpha = 1;
+        } completion:nil];
+        
+        [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
+//       [av show];
     } else {
         self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@", [self nextPlayerTurn]];
     }
