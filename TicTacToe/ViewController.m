@@ -58,7 +58,7 @@ NSArray *_patterns;
     _colThree = @[_myLabelThree, _myLabelSix, _myLabelNine];
     
     _diagOne = @[_myLabelOne, _myLabelFive, _myLabelNine];
-    _diagTwo = @[_myLabelThree, _myLabelFive, _myLabelThree];
+    _diagTwo = @[_myLabelSeven, _myLabelFive, _myLabelThree];
     
     _patterns = @[_rowOne, _rowTwo, _rowThree, _colOne, _colTwo, _colThree, _diagOne, _diagTwo];
     
