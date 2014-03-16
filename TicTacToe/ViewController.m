@@ -22,25 +22,28 @@
 @property (weak, nonatomic) IBOutlet UIView *gameView;
 @property (strong, nonatomic) NSString *currentPlayer;
 
-
+@property (weak, nonatomic) IBOutlet UILabel *currentTurnLabel;
+@property (weak, nonatomic) IBOutlet UILabel *currentBox;
 
 @end
 
 @implementation ViewController{
 
-NSArray *_rowOne;
-NSArray *_rowTwo;
-NSArray *_rowThree;
+    NSArray *_rowOne;
+    NSArray *_rowTwo;
+    NSArray *_rowThree;
 
-NSArray *_colOne;
-NSArray *_colTwo;
-NSArray *_colThree;
+    NSArray *_colOne;
+    NSArray *_colTwo;
+    NSArray *_colThree;
 
-NSArray *_diagOne;
-NSArray *_diagTwo;
+    NSArray *_diagOne;
+    NSArray *_diagTwo;
 
-NSArray *_patterns;
-    
+    NSArray *_patterns;
+        
+    NSArray *_allBoxs;
+    CGPoint orginalDraggablePlayerLocation;
 
 }
 
@@ -62,7 +65,8 @@ NSArray *_patterns;
     
     _patterns = @[_rowOne, _rowTwo, _rowThree, _colOne, _colTwo, _colThree, _diagOne, _diagTwo];
     
-    
+    _allBoxs = @[_myLabelOne,_myLabelTwo, _myLabelThree, _myLabelFour, _myLabelFive, _myLabelSix, _myLabelSeven, _myLabelEight, _myLabelNine];
+    orginalDraggablePlayerLocation = self.currentTurnLabel.center;
     [self setupNewGame];
 }
 
@@ -141,41 +145,85 @@ NSArray *_patterns;
     [self setupNewGame];
 }
 
--(IBAction)onLabelTapped:(UITapGestureRecognizer *)tapGestureRecognizer
-{
-    UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
-    label.text = self.currentPlayer;
-    label.layer.backgroundColor = [UIColor whiteColor].CGColor;
-    [label setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
-    [UIView animateKeyframesWithDuration:0.2 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
 
-        [label setTransform:CGAffineTransformMakeScale(0.35, 0.35)];
-        [label setTransform:CGAffineTransformMakeRotation(M_PI)];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.2 animations:^{
-//
-            [label setTransform:CGAffineTransformMakeScale(1, 1)];
+- (IBAction)onDrag:(UIPanGestureRecognizer *)panGestureReconizer
+{
+    CGPoint point = [panGestureReconizer locationInView:self.view];
+    CGPoint convertedPoint = [self.view convertPoint:point toView:self.gameView];
+    NSLog(@"Draggin x: %f y: %f", point.x, point.y);
+    NSLog(@"Box x: %f y: %f", self.myLabelOne.frame.origin.x, self.myLabelOne.frame.origin.y);
+    NSLog(@"Converted Box x: %f y: %f", convertedPoint.x, convertedPoint.y);
+    self.currentTurnLabel.center = point;
+    
+    point.x += self.currentTurnLabel.frame.origin.x;
+    point.y += self.currentTurnLabel.frame.origin.y;
+    
+    for (UILabel *box in _allBoxs) {
+//        CGRect convertedRect = [box convert]
+        if (CGRectContainsPoint(box.frame, convertedPoint)) {
+            NSLog(@"winner");
+            _currentBox = box;
+        }
+    }
+    
+    if(panGestureReconizer.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"Current Box: %@", self.currentBox);
+        [self placePlayer:self.currentPlayer inBoxLabel:self.currentBox];
+        [self checkWinner];
+        
+        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+        self.currentTurnLabel.text = self.currentPlayer;
+    }
+    
+}
+
+-(void)placePlayer:(NSString *)player inBoxLabel:(UILabel *)box
+{
+        box.text = player;
+        [box setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
+        [UIView animateKeyframesWithDuration:0.2 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
+        
+            [box setTransform:CGAffineTransformMakeScale(0.35, 0.35)];
+            [box setTransform:CGAffineTransformMakeRotation(M_PI)];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.2 animations:^{
+            
+            [box setTransform:CGAffineTransformMakeScale(1, 1)];
         }];
     }];
+}
 
+-(void)checkWinner
+{
     if ([self whoWon]) {
-
+        
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
-                                                    message:[NSString stringWithFormat:@"%@ is the winner", label.text]
+                                                    message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayer]
                                                    delegate:self
                                           cancelButtonTitle:@"New Game"
                                           otherButtonTitles:nil];
         self.whichPlayerLabel.alpha = 0;
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", label.text];
+        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", self.currentPlayer];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
             self.whichPlayerLabel.alpha = 1;
         } completion:nil];
         
         [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
-//       [av show];
     } else {
         self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@", [self nextPlayerTurn]];
     }
+}
+
+
+-(IBAction)onLabelTapped:(UITapGestureRecognizer *)tapGestureRecognizer
+{
+    UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
+    
+    [self placePlayer:self.currentPlayer inBoxLabel:label];
+    
+    [self checkWinner];
+   
 }
 
 @end

@@ -13,7 +13,7 @@
                         <viewControllerLayoutGuide type="bottom" id="MeM-EL-O7t"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5a-81-P9r">
@@ -112,14 +112,23 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="X" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ATb-7T-XWh">
+                                <rect key="frame" x="120" y="380" width="80" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="66"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="9iv-uV-nPh" appends="YES" id="7V3-UA-j1O"/>
+                            <outletCollection property="gestureRecognizers" destination="bcp-RB-CHK" appends="YES" id="8Vw-yP-Z4f"/>
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="currentTurnLabel" destination="ATb-7T-XWh" id="PSL-Xw-H0m"/>
                         <outlet property="gameView" destination="6w1-DE-1Eo" id="xZh-eC-4Pw"/>
                         <outlet property="myLabelEight" destination="lzz-vY-Awo" id="Zve-xZ-zfm"/>
                         <outlet property="myLabelFive" destination="lg5-kF-fe7" id="5iM-zF-cZ6"/>
@@ -139,12 +148,17 @@
                         <action selector="onLabelTapped:" destination="vXZ-lx-hvc" id="EWc-45-T5a"/>
                     </connections>
                 </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="bcp-RB-CHK">
+                    <connections>
+                        <action selector="onDrag:" destination="vXZ-lx-hvc" id="r08-di-15g"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>
