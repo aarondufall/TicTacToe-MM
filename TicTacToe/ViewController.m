@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "GameBoard.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *myLabelOne;
@@ -20,6 +21,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *myLabelNine;
 @property (strong, nonatomic) IBOutlet UILabel *whichPlayerLabel;
 @property (weak, nonatomic) IBOutlet UIView *gameView;
+
+@property (strong, nonatomic) GameBoard *board;
+
 @property (strong, nonatomic) NSString *currentPlayer;
 
 @property (weak, nonatomic) IBOutlet UILabel *currentTurnLabel;
@@ -41,8 +45,7 @@
     NSArray *_diagTwo;
 
     NSArray *_patterns;
-        
-    NSArray *_allBoxs;
+    
     CGPoint orginalDraggablePlayerLocation;
     
     
@@ -59,21 +62,9 @@
 {
     [super viewDidLoad];
     
-    
-    _rowOne = @[_myLabelOne, _myLabelTwo, _myLabelThree];
-    _rowTwo = @[_myLabelFour, _myLabelFive, _myLabelSix];
-    _rowThree = @[_myLabelSeven, _myLabelEight, _myLabelNine];
-    
-    _colOne = @[_myLabelOne, _myLabelFour,_myLabelSeven];
-    _colTwo = @[_myLabelTwo, _myLabelFive, _myLabelEight];
-    _colThree = @[_myLabelThree, _myLabelSix, _myLabelNine];
-    
-    _diagOne = @[_myLabelOne, _myLabelFive, _myLabelNine];
-    _diagTwo = @[_myLabelSeven, _myLabelFive, _myLabelThree];
-    
-    _patterns = @[_rowOne, _rowTwo, _rowThree, _colOne, _colTwo, _colThree, _diagOne, _diagTwo];
-    
-    _allBoxs = @[_myLabelOne,_myLabelTwo, _myLabelThree, _myLabelFour, _myLabelFive, _myLabelSix, _myLabelSeven, _myLabelEight, _myLabelNine];
+    NSArray *tiles = @[_myLabelOne,_myLabelTwo, _myLabelThree, _myLabelFour, _myLabelFive, _myLabelSix, _myLabelSeven, _myLabelEight, _myLabelNine];
+    GameBoard *gameBoard = [[GameBoard alloc]initWithTiles:tiles];
+    self.board = gameBoard;
     orginalDraggablePlayerLocation = self.currentTurnLabel.center;
     [self setupNewGame];
 }
@@ -82,11 +73,9 @@
 {
     self.currentPlayer = @"X";
     self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@",self.currentPlayer];
-    for (NSArray *pattern in _patterns) {
-        for (UILabel *label in pattern) {
-            label.text = nil;
-            label.backgroundColor = [UIColor whiteColor];
-        }
+    for (UILabel *tile in self.board.tiles) {
+        tile.text = nil;
+        tile.backgroundColor = [UIColor whiteColor];
     }
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayer;
@@ -121,41 +110,6 @@
     return self.currentPlayer;
 }
 
--(NSString *)whoWon
-{
-    for (NSArray *pattern in _patterns) {
-        NSString *lastBox;
-        int matches = 0;
-    
-        for (UILabel *label in pattern) {
-            if (label.text) {
-                if (!lastBox) {
-                    lastBox = label.text;
-                }
-                if ([lastBox isEqualToString:label.text]) {
-                    lastBox = label.text;
-                    matches++;
-                } else {
-                    lastBox = label.text;
-                }
-                
-                if (matches >= 3) {
-                    for (UILabel * label in pattern) {
-                        label.backgroundColor = [UIColor orangeColor];
-                    }
-                    _gameOver = YES;
-                    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-                    return label.text;
-                }
-                
-            } else {
-                break;
-            }
-        }
-    }
-    
-    return nil;
-}
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -173,7 +127,7 @@
     point.x += self.currentTurnLabel.frame.origin.x;
     point.y += self.currentTurnLabel.frame.origin.y;
     
-    for (UILabel *box in _allBoxs) {
+    for (UILabel *box in self.board.tiles) {
         if (CGRectContainsPoint(box.frame, convertedPoint)) {
             _currentBox = box;
         }
@@ -201,8 +155,10 @@
 
 -(void)checkWinner
 {
-    if ([self whoWon]) {
-        
+    if ([self.board whoWon]) {
+       
+        _gameOver = YES;
+        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
         [self stopTimer];
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
                                                     message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayer]

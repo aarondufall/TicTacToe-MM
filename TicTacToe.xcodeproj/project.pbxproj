@@ -23,6 +23,8 @@
 		F5FA4FD418D2E354000919E6 /* TicTacToeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FD318D2E354000919E6 /* TicTacToeTests.m */; };
 		F5FA4FDE18D2E516000919E6 /* CheckMate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FA4FDD18D2E516000919E6 /* CheckMate.framework */; };
 		F5FA4FE118D61791000919E6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FE018D61791000919E6 /* HelpViewController.m */; };
+		F5FA4FE418D62DC5000919E6 /* OpponentAI.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FE318D62DC5000919E6 /* OpponentAI.m */; };
+		F5FA4FE718D630BF000919E6 /* GameBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FE618D630BF000919E6 /* GameBoard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,10 @@
 		F5FA4FDD18D2E516000919E6 /* CheckMate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CheckMate.framework; path = ../CheckMate.framework; sourceTree = "<group>"; };
 		F5FA4FDF18D61791000919E6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		F5FA4FE018D61791000919E6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
+		F5FA4FE218D62DC5000919E6 /* OpponentAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpponentAI.h; sourceTree = "<group>"; };
+		F5FA4FE318D62DC5000919E6 /* OpponentAI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpponentAI.m; sourceTree = "<group>"; };
+		F5FA4FE518D630BF000919E6 /* GameBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBoard.h; sourceTree = "<group>"; };
+		F5FA4FE618D630BF000919E6 /* GameBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameBoard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +134,10 @@
 				F5FA4FAF18D2E353000919E6 /* Supporting Files */,
 				F5FA4FDF18D61791000919E6 /* HelpViewController.h */,
 				F5FA4FE018D61791000919E6 /* HelpViewController.m */,
+				F5FA4FE218D62DC5000919E6 /* OpponentAI.h */,
+				F5FA4FE318D62DC5000919E6 /* OpponentAI.m */,
+				F5FA4FE518D630BF000919E6 /* GameBoard.h */,
+				F5FA4FE618D630BF000919E6 /* GameBoard.m */,
 			);
 			path = TicTacToe;
 			sourceTree = "<group>";
@@ -261,6 +271,8 @@
 				F5FA4FBF18D2E353000919E6 /* ViewController.m in Sources */,
 				F5FA4FB918D2E353000919E6 /* AppDelegate.m in Sources */,
 				F5FA4FB518D2E353000919E6 /* main.m in Sources */,
+				F5FA4FE418D62DC5000919E6 /* OpponentAI.m in Sources */,
+				F5FA4FE718D630BF000919E6 /* GameBoard.m in Sources */,
 				F5FA4FE118D61791000919E6 /* HelpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
