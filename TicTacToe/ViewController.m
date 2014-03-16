@@ -44,6 +44,12 @@
         
     NSArray *_allBoxs;
     CGPoint orginalDraggablePlayerLocation;
+    
+    
+    NSDate *_startDate;
+    NSTimer *_timer;
+    NSTimeInterval _totalCountDownInterval;
+    NSInteger _remainingTime;
 
 }
 
@@ -82,7 +88,8 @@
     }
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayer;
-    [self.whichPlayerLabel.layer removeAllAnimations];
+    [self startTimer];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,9 +112,9 @@
 -(NSString *)nextPlayerTurn
 {
     self.currentPlayer = [self.currentPlayer isEqualToString:@"X"] ? @"O" : @"X";
-    self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@", [self currentPlayer]];
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayer;
+    [self startTimer];
     return self.currentPlayer;
 }
 
@@ -133,6 +140,7 @@
                     for (UILabel * label in pattern) {
                         label.backgroundColor = [UIColor orangeColor];
                     }
+                    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
                     return label.text;
                 }
                 
@@ -155,25 +163,20 @@
 {
     CGPoint point = [panGestureReconizer locationInView:self.view];
     CGPoint convertedPoint = [self.view convertPoint:point toView:self.gameView];
-    NSLog(@"Draggin x: %f y: %f", point.x, point.y);
-    NSLog(@"Box x: %f y: %f", self.myLabelOne.frame.origin.x, self.myLabelOne.frame.origin.y);
-    NSLog(@"Converted Box x: %f y: %f", convertedPoint.x, convertedPoint.y);
+    
     self.currentTurnLabel.center = point;
     
     point.x += self.currentTurnLabel.frame.origin.x;
     point.y += self.currentTurnLabel.frame.origin.y;
     
     for (UILabel *box in _allBoxs) {
-//        CGRect convertedRect = [box convert]
         if (CGRectContainsPoint(box.frame, convertedPoint)) {
-            NSLog(@"winner");
             _currentBox = box;
         }
     }
     
     if(panGestureReconizer.state == UIGestureRecognizerStateEnded)
     {
-        NSLog(@"Current Box: %@", self.currentBox);
         [self placePlayer:self.currentPlayer inBoxLabel:self.currentBox];
         [self checkWinner];
         
@@ -186,16 +189,10 @@
 {
         box.text = player;
         [box setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
-        [UIView animateKeyframesWithDuration:0.2 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
-        
-            [box setTransform:CGAffineTransformMakeScale(0.35, 0.35)];
-            [box setTransform:CGAffineTransformMakeRotation(M_PI)];
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.2 animations:^{
-            
-            [box setTransform:CGAffineTransformMakeScale(1, 1)];
+        [UIView animateWithDuration:0.3 animations:^{
+             [box setTransform:CGAffineTransformMakeScale(1.35, 1.35)];
+            [box setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
         }];
-    }];
 }
 
 -(void)checkWinner
@@ -212,7 +209,8 @@
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
             self.whichPlayerLabel.alpha = 1;
         } completion:nil];
-        
+
+        [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
         [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
     } else {
         [self nextPlayerTurn];
@@ -229,5 +227,46 @@
     [self checkWinner];
    
 }
+-(void)startTimer
+{
+    
+    if (!_totalCountDownInterval) {
+        _totalCountDownInterval = 10.0;
+    }
+    _startDate = [NSDate date];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.25
+                                              target:self
+                                            selector:@selector(updateCounter:)
+                                            userInfo:nil
+                                             repeats:YES];
+    
+    
+}
+
+-(void)stopTimer
+{
+//    _totalCountDownInterval = nil;
+    _startDate = nil;
+    [_timer invalidate];
+    _timer = nil;
+}
+
+
+
+-(void)updateCounter:(NSTimer *)timer
+{
+    NSTimeInterval secondsSinceStart = [[NSDate date] timeIntervalSinceDate:_startDate];
+    
+    _remainingTime = _totalCountDownInterval - secondsSinceStart;
+    
+    NSInteger seconds = _remainingTime % 60;
+    NSString *result = [NSString stringWithFormat:@"Time Left: %02d", seconds];;
+
+    self.whichPlayerLabel.text = result;
+    if (_remainingTime <= 0) {
+        [self nextPlayerTurn];
+    }
+}
+
 
 @end
