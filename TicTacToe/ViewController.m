@@ -80,6 +80,8 @@
             label.backgroundColor = [UIColor whiteColor];
         }
     }
+    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+    self.currentTurnLabel.text = self.currentPlayer;
     [self.whichPlayerLabel.layer removeAllAnimations];
 }
 
@@ -103,6 +105,9 @@
 -(NSString *)nextPlayerTurn
 {
     self.currentPlayer = [self.currentPlayer isEqualToString:@"X"] ? @"O" : @"X";
+    self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@", [self currentPlayer]];
+    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+    self.currentTurnLabel.text = self.currentPlayer;
     return self.currentPlayer;
 }
 
@@ -172,8 +177,7 @@
         [self placePlayer:self.currentPlayer inBoxLabel:self.currentBox];
         [self checkWinner];
         
-        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-        self.currentTurnLabel.text = self.currentPlayer;
+        
     }
     
 }
@@ -211,7 +215,7 @@
         
         [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
     } else {
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@", [self nextPlayerTurn]];
+        [self nextPlayerTurn];
     }
 }
 
