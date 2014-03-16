@@ -22,6 +22,7 @@
 		F5FA4FD218D2E354000919E6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F5FA4FD018D2E354000919E6 /* InfoPlist.strings */; };
 		F5FA4FD418D2E354000919E6 /* TicTacToeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FD318D2E354000919E6 /* TicTacToeTests.m */; };
 		F5FA4FDE18D2E516000919E6 /* CheckMate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FA4FDD18D2E516000919E6 /* CheckMate.framework */; };
+		F5FA4FE118D61791000919E6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FA4FE018D61791000919E6 /* HelpViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,8 @@
 		F5FA4FD118D2E354000919E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F5FA4FD318D2E354000919E6 /* TicTacToeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TicTacToeTests.m; sourceTree = "<group>"; };
 		F5FA4FDD18D2E516000919E6 /* CheckMate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CheckMate.framework; path = ../CheckMate.framework; sourceTree = "<group>"; };
+		F5FA4FDF18D61791000919E6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
+		F5FA4FE018D61791000919E6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +126,8 @@
 				F5FA4FBE18D2E353000919E6 /* ViewController.m */,
 				F5FA4FC018D2E353000919E6 /* Images.xcassets */,
 				F5FA4FAF18D2E353000919E6 /* Supporting Files */,
+				F5FA4FDF18D61791000919E6 /* HelpViewController.h */,
+				F5FA4FE018D61791000919E6 /* HelpViewController.m */,
 			);
 			path = TicTacToe;
 			sourceTree = "<group>";
@@ -256,6 +261,7 @@
 				F5FA4FBF18D2E353000919E6 /* ViewController.m in Sources */,
 				F5FA4FB918D2E353000919E6 /* AppDelegate.m in Sources */,
 				F5FA4FB518D2E353000919E6 /* main.m in Sources */,
+				F5FA4FE118D61791000919E6 /* HelpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,6 +478,7 @@
 				F5FA4FD918D2E354000919E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F5FA4FDA18D2E354000919E6 /* Build configuration list for PBXNativeTarget "TicTacToeTests" */ = {
 			isa = XCConfigurationList;
@@ -480,6 +487,7 @@
 				F5FA4FDC18D2E354000919E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

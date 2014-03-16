@@ -51,6 +51,8 @@
     NSTimeInterval _totalCountDownInterval;
     NSInteger _remainingTime;
 
+    BOOL _gameOver;
+
 }
 
 - (void)viewDidLoad
@@ -88,6 +90,7 @@
     }
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayer;
+    _gameOver = NO;
     [self startTimer];
     
 }
@@ -140,6 +143,7 @@
                     for (UILabel * label in pattern) {
                         label.backgroundColor = [UIColor orangeColor];
                     }
+                    _gameOver = YES;
                     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
                     return label.text;
                 }
@@ -199,11 +203,13 @@
 {
     if ([self whoWon]) {
         
+        [self stopTimer];
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
                                                     message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayer]
                                                    delegate:self
                                           cancelButtonTitle:@"New Game"
                                           otherButtonTitles:nil];
+        
         self.whichPlayerLabel.alpha = 0;
         self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", self.currentPlayer];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
@@ -245,7 +251,7 @@
 
 -(void)stopTimer
 {
-//    _totalCountDownInterval = nil;
+    _totalCountDownInterval = 0;
     _startDate = nil;
     [_timer invalidate];
     _timer = nil;
@@ -260,11 +266,13 @@
     _remainingTime = _totalCountDownInterval - secondsSinceStart;
     
     NSInteger seconds = _remainingTime % 60;
-    NSString *result = [NSString stringWithFormat:@"Time Left: %02d", seconds];;
-
-    self.whichPlayerLabel.text = result;
-    if (_remainingTime <= 0) {
-        [self nextPlayerTurn];
+    NSString *result = [NSString stringWithFormat:@"Time Left: %02d", seconds];
+    
+    if (!_gameOver) {
+        self.whichPlayerLabel.text = result;
+        if (_remainingTime <= 0) {
+            [self nextPlayerTurn];
+        }
     }
 }
 
