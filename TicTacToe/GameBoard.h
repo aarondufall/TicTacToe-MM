@@ -16,5 +16,10 @@
 - (id)initWithTiles:(NSArray *)tiles;
 
 - (NSString *)whoWon;
+- (UILabel *)center;
+- (NSArray *)corners;
+- (NSArray *)sides;
+- (void)resetBoard;
+
 
 @end

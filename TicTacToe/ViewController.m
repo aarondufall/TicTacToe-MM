@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "GameBoard.h"
+#import "OpponentAI.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *myLabelOne;
@@ -23,8 +24,9 @@
 @property (weak, nonatomic) IBOutlet UIView *gameView;
 
 @property (strong, nonatomic) GameBoard *board;
+@property (strong, nonatomic) OpponentAI *opponent;
 
-@property (strong, nonatomic) NSString *currentPlayer;
+@property (strong, nonatomic) NSString *currentPlayerToken;
 
 @property (weak, nonatomic) IBOutlet UILabel *currentTurnLabel;
 @property (weak, nonatomic) IBOutlet UILabel *currentBox;
@@ -63,26 +65,17 @@
     [super viewDidLoad];
     
     NSArray *tiles = @[_myLabelOne,_myLabelTwo, _myLabelThree, _myLabelFour, _myLabelFive, _myLabelSix, _myLabelSeven, _myLabelEight, _myLabelNine];
+    
     GameBoard *gameBoard = [[GameBoard alloc]initWithTiles:tiles];
     self.board = gameBoard;
+    self.opponent = [[OpponentAI alloc]initWithBoard:self.board];
+    
+    
     orginalDraggablePlayerLocation = self.currentTurnLabel.center;
     [self setupNewGame];
 }
 
--(void)setupNewGame
-{
-    self.currentPlayer = @"X";
-    self.whichPlayerLabel.text = [NSString stringWithFormat:@"Current Player: %@",self.currentPlayer];
-    for (UILabel *tile in self.board.tiles) {
-        tile.text = nil;
-        tile.backgroundColor = [UIColor whiteColor];
-    }
-    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-    self.currentTurnLabel.text = self.currentPlayer;
-    _gameOver = NO;
-    [self startTimer];
-    
-}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -101,15 +94,22 @@
     return nil;
 }
 
--(NSString *)nextPlayerTurn
+
+-(void)setupNewGame
 {
-    self.currentPlayer = [self.currentPlayer isEqualToString:@"X"] ? @"O" : @"X";
+    [self.board resetBoard];
+    
+    self.currentPlayerToken = @"X";
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-    self.currentTurnLabel.text = self.currentPlayer;
+    self.currentTurnLabel.text = self.currentPlayerToken;
+    
+    _gameOver = NO;
+    
     [self startTimer];
-    return self.currentPlayer;
+    
 }
 
+#pragma mark User Interface
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -117,6 +117,8 @@
 }
 
 
+
+#pragma mark User Input
 - (IBAction)onDrag:(UIPanGestureRecognizer *)panGestureReconizer
 {
     CGPoint point = [panGestureReconizer locationInView:self.view];
@@ -135,12 +137,42 @@
     
     if(panGestureReconizer.state == UIGestureRecognizerStateEnded)
     {
-        [self placePlayer:self.currentPlayer inBoxLabel:self.currentBox];
-        [self checkWinner];
-        
-        
+        [self placePlayer:self.currentPlayerToken inBoxLabel:self.currentBox];
+        [self nextPlayerTurn];
     }
     
+}
+
+-(IBAction)onLabelTapped:(UITapGestureRecognizer *)tapGestureRecognizer
+{
+    UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
+    
+    [self placePlayer:self.currentPlayerToken inBoxLabel:label];
+    [self nextPlayerTurn];
+    
+    
+}
+
+#pragma mark Game actions
+
+-(NSString *)nextPlayerTurn
+{
+    [self checkWinner];
+    if ([self.currentPlayerToken isEqualToString:@"X"]) {
+        self.currentPlayerToken = @"O";
+        //diable touch
+       
+        [self placePlayer:self.currentPlayerToken inBoxLabel:[self.opponent takeTurn]];
+        self.currentPlayerToken = @"X";
+    } else {
+        
+    }
+//    self.currentPlayerToken = [self.currentPlayerToken isEqualToString:@"X"] ? @"O" : @"X";
+  
+    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+    self.currentTurnLabel.text = self.currentPlayerToken;
+    [self startTimer];
+    return self.currentPlayerToken;
 }
 
 -(void)placePlayer:(NSString *)player inBoxLabel:(UILabel *)box
@@ -161,34 +193,23 @@
         self.currentTurnLabel.center = orginalDraggablePlayerLocation;
         [self stopTimer];
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
-                                                    message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayer]
+                                                    message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayerToken]
                                                    delegate:self
                                           cancelButtonTitle:@"New Game"
                                           otherButtonTitles:nil];
         
         self.whichPlayerLabel.alpha = 0;
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", self.currentPlayer];
+        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", self.currentPlayerToken];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
             self.whichPlayerLabel.alpha = 1;
         } completion:nil];
 
         [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
         [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
-    } else {
-        [self nextPlayerTurn];
     }
 }
 
-
--(IBAction)onLabelTapped:(UITapGestureRecognizer *)tapGestureRecognizer
-{
-    UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
-    
-    [self placePlayer:self.currentPlayer inBoxLabel:label];
-    
-    [self checkWinner];
-   
-}
+#pragma mark Timer
 -(void)startTimer
 {
     

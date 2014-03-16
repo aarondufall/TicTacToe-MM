@@ -23,6 +23,10 @@
     
     NSArray *_patterns;
     
+    NSArray *_corners;
+    NSArray *_sides;
+    UILabel *_center;
+    
     
 }
 
@@ -43,8 +47,21 @@
         
         _patterns = @[_rowOne, _rowTwo, _rowThree, _colOne, _colTwo, _colThree, _diagOne, _diagTwo];
         self.tiles = tiles;
+        
+        _center  = tiles[4];
+        _corners = @[tiles[0],tiles[2],tiles[6],tiles[8]];
+        _sides   = @[tiles[3],tiles[1],tiles[5],tiles[7]];
     }
     return self;
+}
+
+-(void)resetBoard
+{
+    for (UILabel *tile in self.tiles) {
+        tile.text = nil;
+        tile.backgroundColor = [UIColor whiteColor];
+    }
+
 }
 
 
@@ -71,9 +88,6 @@
                     for (UILabel * label in pattern) {
                         label.backgroundColor = [UIColor orangeColor];
                     }
-// put in winner check
-//                    _gameOver = YES;
-//                    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
                     return label.text;
                 }
                 
@@ -84,6 +98,21 @@
     }
     
     return nil;
+}
+
+- (NSArray *)corners
+{
+    return _corners;
+}
+
+- (NSArray *)sides
+{
+    return _sides;
+}
+
+- (UILabel *)center
+{
+    return _center;
 }
 
 @end

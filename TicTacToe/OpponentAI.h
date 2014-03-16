@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+@class GameBoard;
 
 @interface OpponentAI : NSObject
+
+- (id)initWithBoard:(GameBoard *)board;
+- (UILabel *)takeTurn;
 
 @end

@@ -7,17 +7,38 @@
 //
 
 #import "OpponentAI.h"
+#import "GameBoard.h"
 
 @implementation OpponentAI{
-    NSArray *_board;
+    GameBoard *_board;
+    NSArray *_preferences;
 }
 
-- (id)initWithBoard:(NSArray *)board
+- (id)initWithBoard:(GameBoard *)board
 {
     if (self = [super init]) {
-        
+        _board = board;
     }
     return self;
+}
+
+-(UILabel *)takeTurn
+{
+    if (!_board.center.text) {
+        return _board.center;
+    }
+    for (UILabel *tile in _board.corners) {
+        if (!tile.text) {
+            return tile;
+        }
+    }
+    
+    for (UILabel *tile in _board.sides) {
+        if (!tile.text) {
+            return tile;
+        }
+    }
+    return nil;
 }
 
 @end
