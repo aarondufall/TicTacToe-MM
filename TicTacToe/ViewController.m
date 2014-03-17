@@ -184,9 +184,9 @@
 
 -(void)checkWinner
 {
-    if ([self whoWon]) {
+    if ([self whoWon] && !_gameOver) {
         [self showWinnerWithMessage:[NSString stringWithFormat:@"%@ is the winner", [self whoWon]]];
-    } else if ([self.board isFull]){
+    } else if ([self.board isFull] &&!_gameOver){
         [self showWinnerWithMessage:@"It's A Draw"];
     }
 }
