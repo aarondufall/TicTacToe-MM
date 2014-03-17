@@ -35,18 +35,6 @@
 
 @implementation ViewController{
 
-//    NSArray *_rowOne;
-//    NSArray *_rowTwo;
-//    NSArray *_rowThree;
-//
-//    NSArray *_colOne;
-//    NSArray *_colTwo;
-//    NSArray *_colThree;
-//
-//    NSArray *_diagOne;
-//    NSArray *_diagTwo;
-
-//    NSArray *_patterns;
     
     CGPoint orginalDraggablePlayerLocation;
     
@@ -105,7 +93,7 @@
     
     _gameOver = NO;
     
-//    [self startTimer];
+   [self startTimer];
     
 }
 
@@ -172,7 +160,7 @@
   
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayerToken;
-//    [self startTimer];
+    [self startTimer];
     return self.currentPlayerToken;
 }
 
@@ -265,7 +253,6 @@
 
 -(void)stopTimer
 {
-    _remainingTime = nil;
     _startDate = nil;
     [_timer invalidate];
     _timer = nil;
