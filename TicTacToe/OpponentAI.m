@@ -11,7 +11,6 @@
 
 @implementation OpponentAI{
     GameBoard *_board;
-    NSArray *_preferences;
 }
 
 - (id)initWithBoard:(GameBoard *)board

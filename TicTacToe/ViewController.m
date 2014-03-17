@@ -35,18 +35,18 @@
 
 @implementation ViewController{
 
-    NSArray *_rowOne;
-    NSArray *_rowTwo;
-    NSArray *_rowThree;
+//    NSArray *_rowOne;
+//    NSArray *_rowTwo;
+//    NSArray *_rowThree;
+//
+//    NSArray *_colOne;
+//    NSArray *_colTwo;
+//    NSArray *_colThree;
+//
+//    NSArray *_diagOne;
+//    NSArray *_diagTwo;
 
-    NSArray *_colOne;
-    NSArray *_colTwo;
-    NSArray *_colThree;
-
-    NSArray *_diagOne;
-    NSArray *_diagTwo;
-
-    NSArray *_patterns;
+//    NSArray *_patterns;
     
     CGPoint orginalDraggablePlayerLocation;
     
@@ -105,7 +105,7 @@
     
     _gameOver = NO;
     
-    [self startTimer];
+//    [self startTimer];
     
 }
 
@@ -161,33 +161,37 @@
     
     if ([self.currentPlayerToken isEqualToString:@"X"]) {
         self.currentPlayerToken = @"O";
-        //diable touch
         [self placePlayer:self.currentPlayerToken inBoxLabel:[self.opponent takeTurn]];
         self.currentPlayerToken = @"X";
         
     }
-    [self checkWinner];
+//    [self checkWinner];
+
       // Single Player
       // self.currentPlayerToken = [self.currentPlayerToken isEqualToString:@"X"] ? @"O" : @"X";
   
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayerToken;
-    [self startTimer];
+//    [self startTimer];
     return self.currentPlayerToken;
 }
 
 -(void)placePlayer:(NSString *)player inBoxLabel:(UILabel *)box
 {
         box.text = player;
-        float delay = [player isEqualToString:@"X"]? 0 : 1;
+        float delay = [player isEqualToString:@"X"]? 0 : 0.5;
         [box setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
         box.alpha = 0.0;
         [UIView animateWithDuration:0.3 delay:delay options:UIViewAnimationOptionTransitionNone animations:^{
             [box setTransform:CGAffineTransformMakeScale(1.35, 1.35)];
             box.alpha = 1;
             [box setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
-        } completion:nil];
-
+        } completion:^(BOOL finished){
+            if (finished) {
+                [self checkWinner];
+            }
+        }];
+    
 }
 
 -(void)checkWinner
@@ -261,7 +265,7 @@
 
 -(void)stopTimer
 {
-    _totalCountDownInterval = 0;
+    _remainingTime = nil;
     _startDate = nil;
     [_timer invalidate];
     _timer = nil;
