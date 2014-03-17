@@ -138,8 +138,8 @@
     if(panGestureReconizer.state == UIGestureRecognizerStateEnded)
     {
         [self placePlayer:self.currentPlayerToken inBoxLabel:self.currentBox];
-//        [self nextPlayerTurn];
-        [self performSelector:@selector(nextPlayerTurn) withObject:nil afterDelay:1.0];
+        [self nextPlayerTurn];
+
     }
     
 }
@@ -149,8 +149,7 @@
     UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
     
     [self placePlayer:self.currentPlayerToken inBoxLabel:label];
-//    [self nextPlayerTurn];
-    [self performSelector:@selector(nextPlayerTurn) withObject:nil afterDelay:1.0];
+    [self nextPlayerTurn];
     
     
 }
@@ -163,7 +162,6 @@
     if ([self.currentPlayerToken isEqualToString:@"X"]) {
         self.currentPlayerToken = @"O";
         //diable touch
-       
         [self placePlayer:self.currentPlayerToken inBoxLabel:[self.opponent takeTurn]];
         self.currentPlayerToken = @"X";
         
@@ -181,11 +179,15 @@
 -(void)placePlayer:(NSString *)player inBoxLabel:(UILabel *)box
 {
         box.text = player;
+        float delay = [player isEqualToString:@"X"]? 0 : 1;
         [box setTransform:CGAffineTransformMakeScale(0.25, 0.25)];
-        [UIView animateWithDuration:0.3 animations:^{
-             [box setTransform:CGAffineTransformMakeScale(1.35, 1.35)];
+        box.alpha = 0.0;
+        [UIView animateWithDuration:0.3 delay:delay options:UIViewAnimationOptionTransitionNone animations:^{
+            [box setTransform:CGAffineTransformMakeScale(1.35, 1.35)];
+            box.alpha = 1;
             [box setTransform:CGAffineTransformMakeScale(1.0, 1.0)];
-        }];
+        } completion:nil];
+
 }
 
 -(void)checkWinner
