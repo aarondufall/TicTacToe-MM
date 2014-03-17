@@ -138,7 +138,8 @@
     if(panGestureReconizer.state == UIGestureRecognizerStateEnded)
     {
         [self placePlayer:self.currentPlayerToken inBoxLabel:self.currentBox];
-        [self nextPlayerTurn];
+//        [self nextPlayerTurn];
+        [self performSelector:@selector(nextPlayerTurn) withObject:nil afterDelay:1.0];
     }
     
 }
@@ -148,7 +149,8 @@
     UILabel *label = [self findLabelUsingPoint:[tapGestureRecognizer locationInView:self.gameView]];
     
     [self placePlayer:self.currentPlayerToken inBoxLabel:label];
-    [self nextPlayerTurn];
+//    [self nextPlayerTurn];
+    [self performSelector:@selector(nextPlayerTurn) withObject:nil afterDelay:1.0];
     
     
 }
@@ -189,44 +191,31 @@
 -(void)checkWinner
 {
     if ([self whoWon]) {
-       
-        _gameOver = YES;
-        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-        [self stopTimer];
-        UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
-                                                    message:[NSString stringWithFormat:@"%@ is the winner", [self whoWon]]
-                                                   delegate:self
-                                          cancelButtonTitle:@"New Game"
-                                          otherButtonTitles:nil];
-        
-        self.whichPlayerLabel.alpha = 0;
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", [self whoWon]];
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-            self.whichPlayerLabel.alpha = 1;
-        } completion:nil];
-
-        [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
-        [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
+        [self showWinnerWithMessage:[NSString stringWithFormat:@"%@ is the winner", [self whoWon]]];
     } else if ([self.board isFull]){
-        _gameOver = YES;
-        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
-        [self stopTimer];
-        UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
-                                                    message:[NSString stringWithFormat:@"It's A Draw"]
-                                                   delegate:self
-                                          cancelButtonTitle:@"New Game"
-                                          otherButtonTitles:nil];
-        
-        self.whichPlayerLabel.alpha = 0;
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"It's A Draw"];
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
-            self.whichPlayerLabel.alpha = 1;
-        } completion:nil];
-        
-        [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
-        [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
-
+        [self showWinnerWithMessage:@"It's A Draw"];
     }
+}
+
+-(void)showWinnerWithMessage:(NSString *)message
+{
+    _gameOver = YES;
+    self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+    [self stopTimer];
+    UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
+                                                message:message
+                                               delegate:self
+                                      cancelButtonTitle:@"New Game"
+                                      otherButtonTitles:nil];
+    
+    self.whichPlayerLabel.alpha = 0;
+    self.whichPlayerLabel.text = message;
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+        self.whichPlayerLabel.alpha = 1;
+    } completion:nil];
+    
+    [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
+    [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
 }
 
 -(NSString *)whoWon
