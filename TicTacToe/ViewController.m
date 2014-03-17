@@ -216,22 +216,21 @@
 {
     NSArray *winner;
     if ((winner = [self.board findPatternWithMatches:3 ofPlayer:@"X"])) {
-        for (UILabel * label in winner) {
-            label.backgroundColor = [UIColor orangeColor];
-        }
+        [self performSelector:@selector(showWinningPatten:) withObject:winner afterDelay:0.6];
         return @"X";
     }
     if ((winner = [self.board findPatternWithMatches:3 ofPlayer:@"O"])) {
-        for (UILabel * label in winner) {
-            label.backgroundColor = [UIColor orangeColor];
-        }
+        [self performSelector:@selector(showWinningPatten:) withObject:winner afterDelay:0.6];
         return @"O";
     }
-    
-    for (UILabel * label in winner) {
+    return nil;
+}
+
+-(void)showWinningPatten:(NSArray *)pattern
+{
+    for (UILabel * label in pattern) {
         label.backgroundColor = [UIColor orangeColor];
     }
-    return nil;
 }
 
 #pragma mark Timer
