@@ -64,36 +64,47 @@
 
 }
 
+- (BOOL)isFull
+{
+    int usedTile = 0;
+    for (UILabel *tile in self.tiles) {
+        if (tile.text) {
+            usedTile++;
+        }
+    }
+    if (usedTile >= 9) {
+        return YES;
+    }
+    return NO;
+}
 
 
--(NSString *)whoWon
+
+- (NSArray *)findPatternWithMatches:(int)numberOfMatches ofPlayer:(NSString *)player
 {
     for (NSArray *pattern in _patterns) {
         NSString *lastBox;
+        BOOL containsOpponent = NO;
         int matches = 0;
         
         for (UILabel *label in pattern) {
-            if (label.text) {
+            if ([label.text isEqualToString:player]) {
+                
                 if (!lastBox) {
                     lastBox = label.text;
                 }
-                if ([lastBox isEqualToString:label.text]) {
+                if ([lastBox isEqualToString:player]) {
                     lastBox = label.text;
                     matches++;
                 } else {
                     lastBox = label.text;
                 }
-                
-                if (matches >= 3) {
-                    for (UILabel * label in pattern) {
-                        label.backgroundColor = [UIColor orangeColor];
-                    }
-                    return label.text;
-                }
-                
-            } else {
-                break;
+            } else if (!label.text){
+                containsOpponent = YES;
             }
+        }
+        if (matches >= numberOfMatches) {
+            return pattern;
         }
     }
     

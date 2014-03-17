@@ -24,6 +24,14 @@
 
 -(UILabel *)takeTurn
 {
+    if ([self takeTheWin]) {
+        return [self takeTheWin];
+    }
+    
+    if ([self blockPlayer]) {
+        return [self blockPlayer];
+    }
+    
     if (!_board.center.text) {
         return _board.center;
     }
@@ -40,5 +48,45 @@
     }
     return nil;
 }
+
+-(UILabel *)emptyTileInPattern:(NSArray *)pattern
+{
+    for (UILabel *tile in pattern) {
+        if (!tile.text) {
+            return tile;
+        }
+    }
+    return nil;
+}
+
+-(UILabel *)takeTheWin
+{
+    
+    NSArray *pattern = [_board findPatternWithMatches:2 ofPlayer:@"O"];
+    for (UILabel *tile in pattern) {
+        if (!tile.text) {
+            
+            return tile;
+        }
+    }
+
+    return nil;
+}
+
+-(UILabel *)blockPlayer
+{
+    
+    NSArray *pattern = [_board findPatternWithMatches:2 ofPlayer:@"X"];
+    for (UILabel *tile in pattern) {
+        if (!tile.text) {
+            
+            return tile;
+        }
+    }
+    
+    return nil;
+}
+
+
 
 @end

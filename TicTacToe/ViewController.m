@@ -157,17 +157,18 @@
 
 -(NSString *)nextPlayerTurn
 {
-    [self checkWinner];
+    
     if ([self.currentPlayerToken isEqualToString:@"X"]) {
         self.currentPlayerToken = @"O";
         //diable touch
        
         [self placePlayer:self.currentPlayerToken inBoxLabel:[self.opponent takeTurn]];
         self.currentPlayerToken = @"X";
-    } else {
         
     }
-//    self.currentPlayerToken = [self.currentPlayerToken isEqualToString:@"X"] ? @"O" : @"X";
+    [self checkWinner];
+      // Single Player
+      // self.currentPlayerToken = [self.currentPlayerToken isEqualToString:@"X"] ? @"O" : @"X";
   
     self.currentTurnLabel.center = orginalDraggablePlayerLocation;
     self.currentTurnLabel.text = self.currentPlayerToken;
@@ -187,26 +188,67 @@
 
 -(void)checkWinner
 {
-    if ([self.board whoWon]) {
+    if ([self whoWon]) {
        
         _gameOver = YES;
         self.currentTurnLabel.center = orginalDraggablePlayerLocation;
         [self stopTimer];
         UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
-                                                    message:[NSString stringWithFormat:@"%@ is the winner", self.currentPlayerToken]
+                                                    message:[NSString stringWithFormat:@"%@ is the winner", [self whoWon]]
                                                    delegate:self
                                           cancelButtonTitle:@"New Game"
                                           otherButtonTitles:nil];
         
         self.whichPlayerLabel.alpha = 0;
-        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", self.currentPlayerToken];
+        self.whichPlayerLabel.text = [NSString stringWithFormat:@"%@ is the winner", [self whoWon]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
             self.whichPlayerLabel.alpha = 1;
         } completion:nil];
 
         [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
         [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
+    } else if ([self.board isFull]){
+        _gameOver = YES;
+        self.currentTurnLabel.center = orginalDraggablePlayerLocation;
+        [self stopTimer];
+        UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"Game Over"
+                                                    message:[NSString stringWithFormat:@"It's A Draw"]
+                                                   delegate:self
+                                          cancelButtonTitle:@"New Game"
+                                          otherButtonTitles:nil];
+        
+        self.whichPlayerLabel.alpha = 0;
+        self.whichPlayerLabel.text = [NSString stringWithFormat:@"It's A Draw"];
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse animations:^{
+            self.whichPlayerLabel.alpha = 1;
+        } completion:nil];
+        
+        [self.whichPlayerLabel.layer performSelector:@selector(removeAllAnimations) withObject:nil afterDelay:2.0];
+        [av performSelector:@selector(show) withObject:nil afterDelay:2.0];
+
     }
+}
+
+-(NSString *)whoWon
+{
+    NSArray *winner;
+    if ((winner = [self.board findPatternWithMatches:3 ofPlayer:@"X"])) {
+        for (UILabel * label in winner) {
+            label.backgroundColor = [UIColor orangeColor];
+        }
+        return @"X";
+    }
+    if ((winner = [self.board findPatternWithMatches:3 ofPlayer:@"O"])) {
+        for (UILabel * label in winner) {
+            label.backgroundColor = [UIColor orangeColor];
+        }
+        return @"O";
+    }
+    
+    for (UILabel * label in winner) {
+        label.backgroundColor = [UIColor orangeColor];
+    }
+    return nil;
 }
 
 #pragma mark Timer

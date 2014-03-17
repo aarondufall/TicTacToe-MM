@@ -14,12 +14,14 @@
 @property (strong, nonatomic) NSArray *patterns;
 
 - (id)initWithTiles:(NSArray *)tiles;
+- (NSArray *)findPatternWithMatches:(int)numberOfMatches ofPlayer:(NSString *)player;
 
-- (NSString *)whoWon;
+
 - (UILabel *)center;
 - (NSArray *)corners;
 - (NSArray *)sides;
 - (void)resetBoard;
+- (BOOL)isFull;
 
 
 @end
